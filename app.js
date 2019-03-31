@@ -180,6 +180,11 @@ var UIController = ( function() {
         
     };
     
+    var nodeListForEach = function(arr, cb){
+        for(var i=0;i<arr.length;i++)
+            cb(arr[i], i);
+    };
+    
     return {
         getInput : function(){
             return {
@@ -242,6 +247,20 @@ var UIController = ( function() {
             
         },
         
+        changedType: function(){
+            
+            var fields = document.querySelectorAll(DOMstrings.inputType + ',' + DOMstrings.inputDescription + ',' + DOMstrings.inputValue);
+            
+            nodeListForEach(fields, function(cur, ind){
+                
+                cur.classList.toggle('red-focus');
+                
+            });
+            
+            document.querySelector(DOMstrings.inputButton).classList.toggle('red');
+            
+        },
+        
         displayBudget: function(obj){
             
             var type;
@@ -269,11 +288,6 @@ var UIController = ( function() {
                     cur.textContent = list[ind] + '%';
                 else
                     cur.textContent = '---';
-            };
-            
-            var nodeListForEach = function(arr, cb){
-                for(var i=0;i<arr.length;i++)
-                    cb(arr[i], i);
             };
             
             nodeListForEach(fields, callBack);
@@ -317,6 +331,8 @@ var AppController = ( function(budCtrl, uiCtrl) {
         });
         
         document.querySelector(DOM.container).addEventListener('click', deleteCtrlBtn);
+        
+        document.querySelector(DOM.inputType).addEventListener('change', uiCtrl.changedType);
     };
     
     var updatePercentages = function(){
